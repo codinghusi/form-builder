@@ -8,33 +8,30 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class EntryController extends Controller
 {
-
-    public function createForm(): View {
-        return view('entries.form');
-    }
-
-    private function validateForm(Request $request, ?string $id = null, ?string $user_id = null): array {
+    private function validateForm(Request $request, ?string $id = null): array {
         return $request->validate([
             'title' => [
                 'required',
                 'max:255',
                 Rule::unique('entries')
                     ->ignore($id)
-                    ->where(function ($query) use ($request, $user_id) {
-                        $title = $request->input('title');
-                        return $query
-                            ->where('user_id', $user_id)
-                            ->where('title', $title);
+                    ->where(function ($query) {
+                        return $query->where('user_id', Auth::id());
                     })
             ],
             'description' => 'max:65535',
         ]);
+    }
+
+    public function createForm(): View {
+        return view('entries.form', ['mode' => 'create']);
     }
 
     public function createPost(Request $request): View | RedirectResponse {
@@ -44,7 +41,7 @@ class EntryController extends Controller
             $entry = new Entry();
             $entry->title = $request->input('title');
             $entry->description = $request->input('description');
-            $entry->user_id = auth()->id();
+            $entry->user_id = Auth::id();
             $entry->save();
             return redirect()->route('entry.view', ['id' => $entry->id]);
         }
@@ -67,7 +64,7 @@ class EntryController extends Controller
         } else if ($entry->user_id != auth()->id()) {
             abort(403);
         }
-        $validated = $this->validateForm($request, $id, $entry->user_id);
+        $validated = $this->validateForm($request, $id);
 
         if ($validated) {
             $entry->title = $request->input('title');
