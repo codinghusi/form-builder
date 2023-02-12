@@ -44,6 +44,11 @@ class User extends Authenticatable
 
     public function entries()
     {
-        return $this->hasMany(Entry::class);
+        return $this->hasMany(Paper::class);
+    }
+
+    public function forms()
+    {
+        return $this->hasMany(Form::class);
     }
 }

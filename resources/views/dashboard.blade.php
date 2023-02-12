@@ -1,20 +1,20 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('Dashboard') }}
+        {{ __('form.list') }}
     </x-slot>
 
     <x-slot name="controls">
         <a class="flex gap-1 rounded bg-green-700 px-4 py-2 pl-3 font-bold"
-           href="{{ route('entry.create.form') }}">
+           href="{{ route('form.create') }}">
             @svg('uiw-plus-square-o', 'h-6 w-9')
-            {{__('entry.create.link')}}
+            {{__('form.create.link')}}
         </a>
     </x-slot>
 
     <x-slot name="content">
         <ul class="list-none">
-            @foreach ($entries as $entry)
-                @include('entries.list-item', $entry)
+            @foreach ($forms as $form)
+                @include('forms.list-item', $form)
             @endforeach
         </ul>
     </x-slot>

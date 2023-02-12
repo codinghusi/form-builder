@@ -188,6 +188,7 @@ return [
          */
         Reliese\Coders\CodersServiceProvider::class,
         ServiceProvider::class,
+        GrahamCampbell\Markdown\MarkdownServiceProvider::class,
 
         /*
          * Application Service Providers...
