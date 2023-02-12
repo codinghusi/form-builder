@@ -42,15 +42,18 @@ class PaperController extends Controller
     public function create(Request $request, string $form_id): View | RedirectResponse {
         $validated = $this->validateForm($request, null, $form_id);
 
-        if (Auth::id() != Form::find($form_id)->user_id) {
-            abort(403);
+        $form = Form::find($form_id);
+
+        if (Auth::id() != $form->user_id) {
+            $form = $form->replicate();
+            $form->user_id = Auth::id();
         }
 
         if ($validated) {
             $paper = new Paper();
             $paper->title = $request->input('title');
             $paper->values = $request->input('values');
-            $paper->form_id = $form_id;
+            $paper->form_id = $form->id;
             $paper->save();
             return redirect()->route('paper.view', ['id' => $paper->id]);
         }

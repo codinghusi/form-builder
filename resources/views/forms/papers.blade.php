@@ -10,11 +10,9 @@
         <x-secondary-button tag="a" :href="route('form.view', ['id' => $id])">
             Zum Formular
         </x-secondary-button>
-        <a class="flex gap-1 rounded bg-green-700 px-4 py-2 pl-3 font-bold"
-           href="{{ route('paper.create', ['id' => $id]) }}">
-            @svg('uiw-plus-square-o', 'h-6 w-9')
+        <x-create-button :href="route('paper.create', ['id' => $id])">
             {{__('paper.create.link')}}
-        </a>
+        </x-create-button>
     </x-slot>
 
     <x-slot name="content">

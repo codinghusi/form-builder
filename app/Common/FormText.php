@@ -4,20 +4,15 @@ namespace App\Common;
 
 use GrahamCampbell\Markdown\Facades\Markdown;
 
-const REG_TEXT = '/@text\((\d+)\)/gm';
-const REG_BIGTEXT = '/@freitext/gm';
-const REG_TABLE = '/@table\((\[[^\)]*\])\)/gm';
-
-const REG = '/@text\((\d+)\)|@freitext|@table\((\[[^\)]*\])\)/m';
+const REG = '/@text\((\d+)\)|@freitext|@table\((\[(?:"[^"]*"|[^"\)]*)*\])\)/m';
 
 class FormText {
     public static function parse(?string $formText): array {
         if (!$formText) {
             return [];
         }
-        $markdown = Markdown::convert($formText)->getContent();
 
-        preg_match_all(REG, $markdown, $matches, PREG_OFFSET_CAPTURE | PREG_UNMATCHED_AS_NULL);
+        preg_match_all(REG, $formText, $matches, PREG_OFFSET_CAPTURE | PREG_UNMATCHED_AS_NULL);
 
         $result = [];
         $pos = 0;
@@ -25,9 +20,11 @@ class FormText {
         foreach ($matches[0] as $i => $match) {
             $str = $match[0];
             $mpos = $match[1];
+            $raw = substr($formText, $pos, $mpos - $pos);
+            $markdown = Markdown::convert($raw)->getContent();
             $result[] = [
                 'type' => 'plain',
-                'value' => substr($markdown, $pos, $mpos - $pos)
+                'value' => $markdown
             ];
 
             if ($matches[1][$i][0]) {
@@ -38,9 +35,15 @@ class FormText {
                 ];
             } else if ($matches[2][$i][0]) {
                 // @table
+                $json = $matches[2][$i][0];
+                $json = htmlspecialchars_decode($json);
+                $data = json_decode($json);
+                if (!$data || !is_array($data) || !is_array($data[0])) {
+                    continue;
+                }
                 $result[] = [
                     'type' => 'table',
-                    'value' => json_decode($matches[2][$i][0])
+                    'value' => $data
                 ];
             } else {
                 // @freitext
@@ -55,7 +58,7 @@ class FormText {
 
         $result[] = [
             'type' => 'plain',
-            'value' => substr($markdown, $pos)
+            'value' => substr($formText, $pos)
         ];
 
         $result['count'] = $count;

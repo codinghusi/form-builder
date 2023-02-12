@@ -1,6 +1,8 @@
 @props([
     'mode' => 'view',
-    'paper'
+    'paper',
+    'form' => null,
+    'form_id'
 ])
 
 @php
@@ -22,11 +24,13 @@
         $title = $paper->title;
         $values = $paper->values;
         $parsed = $paper->parsed;
+        $form_id = $paper->form_id;
     } else {
         $id = null;
         $title = '';
         $values = [];
         $parsed = [];
+        $parsed = $form->parsed;
     }
 
 @endphp
@@ -43,10 +47,10 @@
                 {{ $page['download'] }}
             </x-secondary-button>
         @endif
-        <x-secondary-button tag="a" target="_blank" :href="route('form.view', ['id' => $paper->form_id])">
+        <x-secondary-button tag="a" target="_blank" :href="route('form.view', ['id' => $form_id])">
             Zum Formular
         </x-secondary-button>
-        <x-secondary-button tag="a" :href="route('form.papers', ['id' => $paper->form_id])">
+        <x-secondary-button tag="a" :href="route('form.papers', ['id' => $form_id])">
             Zur Liste
         </x-secondary-button>
     </x-slot>

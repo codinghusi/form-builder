@@ -15,6 +15,25 @@
             .text {
                 text-decoration: underline;
             }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            table, th, td {
+                border: 1px solid black;
+                text-align: left;
+            }
+
+            td {
+                padding: 15px;
+            }
+
+            th {
+                padding: 5px 15px;
+            }
+
         </style>
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
@@ -29,7 +48,7 @@
 
         <br />
 
-        <a class="underline text-indigo-600" href="{{route('paper.view', ['id' => $paper->id])}}">
+        <a href="{{route('paper.view', ['id' => $paper->id])}}">
             Online ansehen
         </a>
     </body>

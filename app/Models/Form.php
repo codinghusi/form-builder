@@ -62,4 +62,12 @@ class Form extends Model
     {
         return FormText::parse($this->attributes['form_text']);
     }
+
+    public function setFormTextAttribute(string $ft) {
+        $this->attributes['form_text'] = htmlspecialchars_decode($ft);
+    }
+
+    public function getFormTextAttribute(string $ft): string {
+        return htmlspecialchars_decode($ft);
+    }
 }

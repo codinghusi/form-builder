@@ -31,6 +31,11 @@
         <x-secondary-button tag="a" :href="route('dashboard')">
             Zur Liste
         </x-secondary-button>
+        @if ($id !== null)
+            <x-create-button :href="route('paper.create', ['id' => $id])">
+                {{__('paper.create.link')}}
+            </x-create-button>
+        @endif
     </x-slot>
 
     <x-page-card>

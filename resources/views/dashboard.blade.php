@@ -4,11 +4,9 @@
     </x-slot>
 
     <x-slot name="controls">
-        <a class="flex gap-1 rounded bg-green-700 px-4 py-2 pl-3 font-bold"
-           href="{{ route('form.create') }}">
-            @svg('uiw-plus-square-o', 'h-6 w-9')
+        <x-create-button :href="route('form.create')">
             {{__('form.create.link')}}
-        </a>
+        </x-create-button>
     </x-slot>
 
     <x-slot name="content">
